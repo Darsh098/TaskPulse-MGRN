@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import CreateTaskForm from './components/CreateTaskFrom';
+import TaskList from './components/TaskList';
+import UpdateTaskForm from './components/UpdateTaskForm'
 
 function App() {
+
+  
+  const tasks = [
+    { id: 1, title: 'Task 1', description: 'Description for Task 1' },
+    { id: 2, title: 'Task 2', description: 'Description for Task 2' },
+    { id: 3, title: 'Task 3', description: 'Description for Task 3' },
+  ];
+
+  const handleCreateTask = (title, description) => {
+    console.log('Creating task:', { title, description });
+  };
+
+  const handleUpdateTask = (taskId, title, description) => {
+    console.log('Updating task:', taskId, title, description);
+  };
+
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CreateTaskForm onCreate={handleCreateTask} />
+      {/* <UpdateTaskForm task={tasks[0]} onUpdate={handleUpdateTask} /> */}
+      <TaskList tasks={tasks} />
     </div>
   );
 }
