@@ -43,10 +43,10 @@ export class TaskResolver {
 
   @Mutation((returns) => SharedTask)
   async createSharedTask(
-    @Args('sharedWithUserId', { type: () => Int }) sharedWithUserId: number,
+    @Args('sharedWithUserEmail') sharedWithUserEmail: string,
     @Args('taskId', { type: () => Int }) taskId: number,
   ) {
-    return await this.taskService.createSharedTask(sharedWithUserId, taskId);
+    return await this.taskService.createSharedTask(sharedWithUserEmail, taskId);
   }
 
   @Mutation((returns) => Boolean)
