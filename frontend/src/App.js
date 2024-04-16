@@ -4,7 +4,7 @@ import TaskList from "./components/TaskList";
 import UpdateTaskForm from "./components/UpdateTaskForm";
 import Navbar from "./components/Navbar";
 import { useUser } from "@clerk/clerk-react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import client from "./client";
 import {
   CREATE_USER,
@@ -13,9 +13,10 @@ import {
   UPDATE_TASK,
 } from "./graphql/mutation";
 import { GET_TASKS_BY_USER, GET_SHARED_TASKS_BY_USER } from "./graphql/queries";
+import { Box, Typography } from "@mui/material";
 
 function App() {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn, user, isLoaded } = useUser();
   const [currentUser, setCurrentUser] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [activeTab, setActiveTab] = useState("created");
@@ -79,7 +80,7 @@ function App() {
     fetchData();
   }, [currentUser, activeTab]);
 
-  if (!user) {
+  if (!isLoaded) {
     return null;
   }
 
@@ -138,23 +139,33 @@ function App() {
   return (
     <div>
       <Navbar />
-      {editTask === null ? (
-        <CreateTaskForm onCreate={handleCreateTask} />
-      ) : (
-        <UpdateTaskForm
-          editTask={editTask}
-          setEditTask={setEditTask}
-          onUpdate={handleUpdateTask}
-        />
-      )}
+      {user ? (
+        <>
+          {editTask === null ? (
+            <CreateTaskForm onCreate={handleCreateTask} />
+          ) : (
+            <UpdateTaskForm
+              editTask={editTask}
+              setEditTask={setEditTask}
+              onUpdate={handleUpdateTask}
+            />
+          )}
 
-      <TaskList
-        tasks={tasks}
-        setTasks={setTasks}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        setEditTask={setEditTask}
-      />
+          <TaskList
+            tasks={tasks}
+            setTasks={setTasks}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setEditTask={setEditTask}
+          />
+        </>
+      ) : (
+        <Box m={5} p={3} bgcolor="white" boxShadow={15} borderRadius={8}>
+          <Typography variant="h6" align="center">
+            Login To Use Task Pulse.
+          </Typography>
+        </Box>
+      )}
     </div>
   );
 }
