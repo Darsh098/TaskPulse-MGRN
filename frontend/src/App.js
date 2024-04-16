@@ -10,16 +10,20 @@ import {
   CREATE_USER,
   CREATE_TASK,
   CREATE_SHARED_TASK,
+  UPDATE_TASK,
 } from "./graphql/mutation";
-import { GET_TASKS_BY_USER } from "./graphql/queries";
+import { GET_TASKS_BY_USER, GET_SHARED_TASKS_BY_USER } from "./graphql/queries";
 
 function App() {
   const { isSignedIn, user } = useUser();
   const [currentUser, setCurrentUser] = useState(null);
   const [tasks, setTasks] = useState([]);
+  const [activeTab, setActiveTab] = useState("created");
+  const [editTask, setEditTask] = useState(null);
   const [createUser] = useMutation(CREATE_USER, { client });
   const [createTask] = useMutation(CREATE_TASK, { client });
   const [createSharedTask] = useMutation(CREATE_SHARED_TASK, { client });
+  const [updateTask] = useMutation(UPDATE_TASK, { client });
 
   useEffect(() => {
     const registerUser = async (user) => {
@@ -45,24 +49,35 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
+      let query;
       if (currentUser) {
+        if (activeTab == "created") {
+          query = GET_TASKS_BY_USER;
+        } else {
+          query = GET_SHARED_TASKS_BY_USER;
+        }
+
         const {
           loading: tasksLoading,
           error: tasksError,
           data: tasksData,
         } = await client.query({
-          query: GET_TASKS_BY_USER,
+          query: query,
           variables: { userId: currentUser.id },
         });
 
         if (!tasksLoading && tasksData) {
-          setTasks(tasksData.getTasksByUser);
+          if (activeTab === "created") {
+            setTasks(tasksData.getTasksByUser);
+          } else {
+            setTasks(tasksData.sharedTasksByUserId);
+          }
         }
       }
     };
 
     fetchData();
-  }, [currentUser]);
+  }, [currentUser, activeTab]);
 
   if (!user) {
     return null;
@@ -94,16 +109,52 @@ function App() {
     }
   };
 
-  const handleUpdateTask = (taskId, title, description) => {
-    console.log("Updating task:", taskId, title, description);
+  const handleUpdateTask = async (taskId, title, description, emails) => {
+    try {
+      await updateTask({
+        variables: {
+          id: taskId,
+          title: title,
+          description: description,
+        },
+      });
+      const updatedTasks = tasks.map((task) =>
+        task.id === taskId ? { ...task, title, description } : task
+      );
+      setTasks(updatedTasks);
+      for (const email of emails) {
+        await createSharedTask({
+          variables: {
+            taskId: taskId,
+            sharedWithUserEmail: email,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
   };
 
   return (
     <div>
       <Navbar />
-      <CreateTaskForm onCreate={handleCreateTask} />
-      {/* <UpdateTaskForm task={tasks[0]} onUpdate={handleUpdateTask} /> */}
-      <TaskList tasks={tasks} />
+      {editTask === null ? (
+        <CreateTaskForm onCreate={handleCreateTask} />
+      ) : (
+        <UpdateTaskForm
+          editTask={editTask}
+          setEditTask={setEditTask}
+          onUpdate={handleUpdateTask}
+        />
+      )}
+
+      <TaskList
+        tasks={tasks}
+        setTasks={setTasks}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        setEditTask={setEditTask}
+      />
     </div>
   );
 }
