@@ -36,9 +36,8 @@ export class TaskResolver {
     @Args('id', { type: () => Int }) id: number,
     @Args('title') title: string,
     @Args('description') description: string,
-    @Args('completed') completed: boolean,
   ) {
-    return await this.taskService.updateTask(id, title, description, completed);
+    return await this.taskService.updateTask(id, title, description);
   }
 
   @Mutation((returns) => SharedTask)
@@ -58,5 +57,15 @@ export class TaskResolver {
       userId,
       taskId,
     );
+  }
+
+  @Mutation((returns) => Task)
+  async markTaskAsComplete(@Args('taskId', { type: () => Int }) taskId: number) {
+    return await this.taskService.markTaskAsComplete(taskId);
+  }
+
+  @Query(() => [Task])
+  async sharedTasksByUserId(@Args('userId', { type: () => Int }) userId: number) {
+    return this.taskService.findSharedTasksByUserId(userId);
   }
 }

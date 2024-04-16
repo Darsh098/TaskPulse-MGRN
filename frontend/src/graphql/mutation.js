@@ -53,18 +53,8 @@ export const CREATE_TASK = gql`
 `;
 
 export const UPDATE_TASK = gql`
-  mutation updateTask(
-    $id: Int!
-    $title: String!
-    $description: String!
-    $completed: Boolean!
-  ) {
-    updateTask(
-      id: $id
-      title: $title
-      description: $description
-      completed: $completed
-    ) {
+  mutation updateTask($id: Int!, $title: String!, $description: String!) {
+    updateTask(id: $id, title: $title, description: $description) {
       id
       title
       description
@@ -99,5 +89,21 @@ export const CREATE_SHARED_TASK = gql`
 export const DELETE_SHARED_TASK = gql`
   mutation deleteSharedTaskByUserIdAndTaskId($userId: Int!, $taskId: Int!) {
     deleteSharedTaskByUserIdAndTaskId(userId: $userId, taskId: $taskId)
+  }
+`;
+
+export const MARK_TASK_AS_COMPLETE = gql`
+  mutation markTaskAsComplete($taskId: Int!) {
+    markTaskAsComplete(taskId: $taskId) {
+      id
+      title
+      description
+      completed
+      createdAt
+      author {
+        id
+        displayName
+      }
+    }
   }
 `;

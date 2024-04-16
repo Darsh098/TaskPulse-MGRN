@@ -44,7 +44,6 @@ export class TasksService {
     id: number,
     title: string,
     description: string,
-    completed: boolean,
   ) {
     const taskToUpdate = await this.taskRepository.findOne({
       where: { id },
@@ -55,8 +54,16 @@ export class TasksService {
     }
     taskToUpdate.title = title;
     taskToUpdate.description = description;
-    taskToUpdate.completed = completed;
     return await this.taskRepository.save(taskToUpdate);
+  }
+
+  async markTaskAsComplete(id: number) {
+    const task = await this.taskRepository.findOne({ where: { id } });
+    if (!task) {
+      throw new Error('Task not found');
+    }
+    task.completed = true;
+    return await this.taskRepository.save(task);
   }
 
   async createSharedTask(sharedWithUserEmail: string, taskId: number) {
@@ -87,5 +94,17 @@ export class TasksService {
     }
     await this.sharedTaskRepository.remove(sharedTaskToDelete);
     return true;
+  }
+
+  async findSharedTasksByUserId(userId: number) {
+    const user = await this.userService.findById(userId);
+    if (!user) {
+      throw new Error('User Not Found!');
+    }
+    const sharedTasks = await this.sharedTaskRepository.find({
+      where: { sharedUser: user },
+      relations: ['task'],
+    });
+    return sharedTasks.map((sharedTask) => sharedTask.task);
   }
 }

@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_ALL_USERS = gql`
   query {
@@ -46,6 +46,18 @@ export const GET_TASK_BY_ID = gql`
 export const GET_TASKS_BY_USER = gql`
   query GetTasksByUser($userId: Int!) {
     getTasksByUser(userId: $userId) {
+      id
+      title
+      description
+      completed
+      createdAt
+    }
+  }
+`;
+
+export const GET_SHARED_TASKS_BY_USER = gql`
+  query GetSharedTasksByUser($userId: Int!) {
+    sharedTasksByUserId(userId: $userId) {
       id
       title
       description
