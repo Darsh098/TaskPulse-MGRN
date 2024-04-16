@@ -6,11 +6,13 @@ const CreateTaskForm = ({ onCreate }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
+  const [emails, setEmails] = useState([]);
 
   const handleCreateTask = () => {
-    onCreate(title, description);
+    onCreate(title, description, emails);
     setTitle('');
     setDescription('');
+    setEmails([]);
   };
 
   const handleOpenDialog = () => {
@@ -21,8 +23,8 @@ const CreateTaskForm = ({ onCreate }) => {
     setOpenDialog(false);
   };
 
-  const handleShareTask = (email) => {
-    console.log('Sharing task with email:', email);
+  const handleShareEmail = (email) => {
+    setEmails([...emails, email]);
     handleCloseDialog();
   };
 
@@ -52,12 +54,12 @@ const CreateTaskForm = ({ onCreate }) => {
             onChange={(e) => setDescription(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Button variant="outlined" color="primary" onClick={handleOpenDialog}>
+        <Grid item xs={4}>
+          <Button variant="outlined" color="primary" fullWidth onClick={handleOpenDialog}>
             Share Task
           </Button>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={4}>
           <Button
             variant="contained"
             color="primary"
@@ -67,8 +69,13 @@ const CreateTaskForm = ({ onCreate }) => {
             Create Task
           </Button>
         </Grid>
+        <Grid item xs={4}>
+          <Button variant="outlined" color="primary" fullWidth>
+            Cancel
+          </Button>
+        </Grid>
       </Grid>
-      <ShareTaskDialog open={openDialog} onClose={handleCloseDialog} onShare={handleShareTask} />
+      <ShareTaskDialog open={openDialog} onClose={handleCloseDialog} onShareEmail={handleShareEmail} />
     </Box>
   );
 };
