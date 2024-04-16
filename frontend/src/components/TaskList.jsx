@@ -123,37 +123,3 @@ const TaskList = ({
 };
 
 export default TaskList;
-
-// const filteredTasks = activeTab === 'created'
-//   ? tasks.filter(task => task.createdByYou)
-//   : tasks.filter(task => !task.createdByYou);
-
-//       {filteredTasks.length === 0 ? (
-//         <Typography variant="body1">No tasks found.</Typography>
-//       ) : (
-//         <List>
-//           {filteredTasks.map((task, index) => (
-//             <React.Fragment key={index}>
-//               <ListItem>
-//                 <ListItemText
-//                   primary={task.title}
-//                   secondary={task.description}
-//                 />
-//                 <IconButton onClick={() => handleCompleteTask(task.id)}>
-//                   <CheckCircleOutlineOutlined />
-//                 </IconButton>
-//                 <IconButton onClick={() => handleEditTask(task.id)}>
-//                   <EditOutlined />
-//                 </IconButton>
-//                 <IconButton onClick={() => handleDeleteTask(task.id)}>
-//                   <DeleteOutline />
-//                 </IconButton>
-//               </ListItem>
-//               {index < filteredTasks.length - 1 && <Divider />}
-//             </React.Fragment>
-//           ))}
-//         </List>
-//       )}
-//     </Box>
-//   );
-// };
