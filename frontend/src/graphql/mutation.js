@@ -68,6 +68,12 @@ export const UPDATE_TASK = gql`
   }
 `;
 
+export const DELETE_TASK = gql`
+  mutation deleteTask($taskId: Int!) {
+    deleteTask(taskId: $taskId)
+  }
+`;
+
 export const CREATE_SHARED_TASK = gql`
   mutation createSharedTask($sharedWithUserEmail: String!, $taskId: Int!) {
     createSharedTask(

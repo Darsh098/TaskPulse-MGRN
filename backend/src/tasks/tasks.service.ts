@@ -66,6 +66,21 @@ export class TasksService {
     return await this.taskRepository.save(task);
   }
 
+  async deleteTask(id: number){
+    try {
+      const task = await this.taskRepository.findOne({ where: { id } });
+      if (!task) {
+        throw new Error('Task not found');
+      }
+      await this.sharedTaskRepository.delete({ task: { id } });
+      await this.taskRepository.remove(task);
+      return true;
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      return false;
+    }
+  }
+
   async createSharedTask(sharedWithUserEmail: string, taskId: number) {
     const sharedWithUser = await this.userService.findByEmail(sharedWithUserEmail);
     if (!sharedWithUser) {
