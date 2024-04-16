@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, Grid } from '@mui/material';
-import ShareTaskDialog from './ShareTaskDialog'; // Import the ShareTaskDialog component
+import React, { useState } from "react";
+import { TextField, Button, Box, Typography, Grid } from "@mui/material";
+import ShareTaskDialog from "./ShareTaskDialog";
 
-const UpdateTaskForm = ({ task, onUpdate }) => {
-  const [title, setTitle] = useState(task.title);
-  const [description, setDescription] = useState(task.description);
-  const [openDialog, setOpenDialog] = useState(false); // State to control the dialog visibility
+const UpdateTaskForm = ({ editTask, setEditTask, onUpdate }) => {
+  const [title, setTitle] = useState(editTask.title);
+  const [description, setDescription] = useState(editTask.description);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [emails, setEmails] = useState([]);
 
   const handleUpdateTask = () => {
-    onUpdate(task.id, title, description);
+    onUpdate(editTask.id, title, description, emails);
+    handleCancel();
   };
 
   const handleOpenDialog = () => {
@@ -19,9 +21,16 @@ const UpdateTaskForm = ({ task, onUpdate }) => {
     setOpenDialog(false);
   };
 
-  const handleShareTask = (email) => {
-    console.log('Sharing task with email:', email);
+  const handleShareEmail = (email) => {
+    setEmails([...emails, email]);
     handleCloseDialog();
+  };
+
+  const handleCancel = () => {
+    setTitle("");
+    setDescription("");
+    setEmails([]);
+    setEditTask(null);
   };
 
   return (
@@ -51,7 +60,12 @@ const UpdateTaskForm = ({ task, onUpdate }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <Button variant="outlined" color="primary" fullWidth onClick={handleOpenDialog}>
+          <Button
+            variant="outlined"
+            color="primary"
+            fullWidth
+            onClick={handleOpenDialog}
+          >
             Share Task
           </Button>
         </Grid>
@@ -61,12 +75,18 @@ const UpdateTaskForm = ({ task, onUpdate }) => {
             color="primary"
             onClick={handleUpdateTask}
             fullWidth
+            disabled={title === ""}
           >
             Update Task
           </Button>
         </Grid>
         <Grid item xs={4}>
-          <Button variant="outlined" color="primary" fullWidth>
+          <Button
+            variant="outlined"
+            color="primary"
+            fullWidth
+            onClick={handleCancel}
+          >
             Cancel
           </Button>
         </Grid>
@@ -74,7 +94,7 @@ const UpdateTaskForm = ({ task, onUpdate }) => {
       <ShareTaskDialog
         open={openDialog}
         onClose={handleCloseDialog}
-        onShare={handleShareTask}
+        onShareEmail={handleShareEmail}
       />
     </Box>
   );
