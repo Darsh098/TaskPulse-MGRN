@@ -59,8 +59,8 @@ export class TasksService {
     return await this.taskRepository.save(taskToUpdate);
   }
 
-  async createSharedTask(sharedWithUserId: number, taskId: number) {
-    const sharedWithUser = await this.userService.findById(sharedWithUserId);
+  async createSharedTask(sharedWithUserEmail: string, taskId: number) {
+    const sharedWithUser = await this.userService.findByEmail(sharedWithUserEmail);
     if (!sharedWithUser) {
       throw new Error('Shared With User Not Found!');
     }
