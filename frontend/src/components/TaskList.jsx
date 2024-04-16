@@ -14,7 +14,7 @@ import DeleteOutline from "@mui/icons-material/DeleteOutline";
 import EditOutlined from "@mui/icons-material/EditOutlined";
 import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { useMutation } from "@apollo/client";
-import { MARK_TASK_AS_COMPLETE } from "../graphql/mutation";
+import { MARK_TASK_AS_COMPLETE, DELETE_TASK } from "../graphql/mutation";
 import client from "../client";
 
 const TaskList = ({
@@ -24,8 +24,8 @@ const TaskList = ({
   setActiveTab,
   setEditTask,
 }) => {
-  // const [activeTab, setActiveTab] = useState('created'); // 'created' or 'shared'
   const [markTaskAsComplete] = useMutation(MARK_TASK_AS_COMPLETE, { client });
+  const [deleteTask] = useMutation(DELETE_TASK, { client });
 
   const handleCompleteTask = async (taskId) => {
     try {
@@ -45,12 +45,20 @@ const TaskList = ({
 
   const handleEditTask = (task) => {
     setEditTask(task);
-    console.log("Editing task:", task.taskId);
   };
 
-  const handleDeleteTask = (taskId) => {
-    // TODO: Implement logic to delete task
-    console.log("Deleting task:", taskId);
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await deleteTask({
+        variables: {
+          taskId: taskId,
+        },
+      });
+      // Update the tasks array to remove the deleted task
+      setTasks(tasks.filter((task) => task.id !== taskId));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
   const handleChangeTab = (event, newValue) => {
