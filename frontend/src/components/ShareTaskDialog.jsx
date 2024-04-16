@@ -4,17 +4,16 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   TextField,
+  Button,
 } from '@mui/material';
 
-const ShareTaskDialog = ({ open, onClose, onShare }) => {
+const ShareTaskDialog = ({ open, onClose, onShareEmail }) => {
   const [email, setEmail] = useState('');
 
-  const handleShareTask = () => {
-    onShare(email);
+  const handleShare = () => {
+    onShareEmail(email);
     setEmail('');
-    onClose();
   };
 
   return (
@@ -22,8 +21,10 @@ const ShareTaskDialog = ({ open, onClose, onShare }) => {
       <DialogTitle>Share Task</DialogTitle>
       <DialogContent>
         <TextField
-          label="Email"
-          variant="outlined"
+          autoFocus
+          margin="dense"
+          label="Email Address"
+          type="email"
           fullWidth
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -33,7 +34,7 @@ const ShareTaskDialog = ({ open, onClose, onShare }) => {
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleShareTask} color="primary">
+        <Button onClick={handleShare} color="primary">
           Share
         </Button>
       </DialogActions>
