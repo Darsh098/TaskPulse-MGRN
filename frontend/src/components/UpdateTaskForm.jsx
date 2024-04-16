@@ -50,16 +50,12 @@ const UpdateTaskForm = ({ task, onUpdate }) => {
             onChange={(e) => setDescription(e.target.value)}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleOpenDialog} // Open the share task dialog
-          >
+        <Grid item xs={4}>
+          <Button variant="outlined" color="primary" fullWidth onClick={handleOpenDialog}>
             Share Task
           </Button>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={4}>
           <Button
             variant="contained"
             color="primary"
@@ -67,6 +63,11 @@ const UpdateTaskForm = ({ task, onUpdate }) => {
             fullWidth
           >
             Update Task
+          </Button>
+        </Grid>
+        <Grid item xs={4}>
+          <Button variant="outlined" color="primary" fullWidth>
+            Cancel
           </Button>
         </Grid>
       </Grid>
