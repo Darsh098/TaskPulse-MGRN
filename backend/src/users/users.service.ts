@@ -18,7 +18,19 @@ export class UsersService {
     return await this.userRepository.findOne({ where: { id } });
   }
 
+  async findByEmail(email: string) {
+    return this.userRepository.findOne({ where: { email } });
+  }
+
   async createUser(googleId: string, displayName: string, email: string) {
+    
+    const existingUser = await this.userRepository.findOne({ where:{ email} });
+    if (existingUser) {
+      // throw new Error('User already exists');
+      return await existingUser;
+    }
+
+    // Create a new user entity and save it to the database
     const newUser = this.userRepository.create({
       googleId,
       displayName,
