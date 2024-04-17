@@ -22,7 +22,9 @@ const CreateTaskForm = ({ onCreate }) => {
   };
 
   const handleShareEmail = (email) => {
-    setEmails([...emails, email]);
+    if (email !== "") {
+      setEmails([...emails, email]);
+    }
     handleCloseDialog();
   };
 
@@ -94,6 +96,8 @@ const CreateTaskForm = ({ onCreate }) => {
         open={openDialog}
         onClose={handleCloseDialog}
         onShareEmail={handleShareEmail}
+        emails={emails}
+        setEmails={setEmails}
       />
     </Box>
   );

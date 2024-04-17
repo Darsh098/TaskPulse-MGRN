@@ -22,7 +22,9 @@ const UpdateTaskForm = ({ editTask, setEditTask, onUpdate }) => {
   };
 
   const handleShareEmail = (email) => {
-    setEmails([...emails, email]);
+    if (email !== "") {
+      setEmails([...emails, email]);
+    }
     handleCloseDialog();
   };
 
@@ -95,6 +97,8 @@ const UpdateTaskForm = ({ editTask, setEditTask, onUpdate }) => {
         open={openDialog}
         onClose={handleCloseDialog}
         onShareEmail={handleShareEmail}
+        emails={emails}
+        setEmails={setEmails}
       />
     </Box>
   );
