@@ -14,7 +14,6 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'src/schema.gql',
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
