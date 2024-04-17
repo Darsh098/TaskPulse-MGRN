@@ -8,6 +8,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ConfigModule } from '@nestjs/config';
+import { MainResolver } from './MainResolver';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -22,13 +24,16 @@ import { ConfigModule } from '@nestjs/config';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Task, SharedTask],
+      entities: [
+        path.join(__dirname, '../dist/**/**.model{.ts,.js}'),
+        path.join(__dirname, './**/**.model{.ts,.js}'),
+      ],
       synchronize: true,
     }),
     UsersModule,
     TasksModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [MainResolver],
 })
 export class AppModule {}
