@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Typography,
@@ -84,18 +84,17 @@ const TaskList = ({
             <React.Fragment key={index}>
               <ListItem
                 style={{
-                  backgroundColor: task.completed ? "#f0f0f0" : "transparent", // Change background color for completed tasks
-                  textDecoration: task.completed ? "none" : "none", // Remove text decoration for completed tasks
+                  backgroundColor: task.completed ? "#f0f0f0" : "transparent", // Changed background color for completed tasks
                 }}
               >
                 <ListItemText
                   primary={task.title}
                   secondary={task.description}
-                  style={{ color: task.completed ? "#888" : "#000" }} // Change text color for completed tasks
+                  style={{ color: task.completed ? "#888" : "#000" }} // Changed text color for completed tasks
                 />
                 <IconButton
                   onClick={() => handleCompleteTask(task.id)}
-                  disabled={task.completed} // Disable the button if the task is already completed
+                  disabled={task.completed} // Disabled the button if the task is already completed
                 >
                   {task.completed ? (
                     <CheckCircleOutlineOutlined style={{ color: "#4caf50" }} />
@@ -105,7 +104,7 @@ const TaskList = ({
                 </IconButton>
                 <IconButton
                   onClick={() => handleEditTask(task)}
-                  disabled={task.completed} // Disable the button if the task is already completed
+                  disabled={task.completed} // Disabled the button if the task is already completed
                 >
                   <EditOutlined />
                 </IconButton>
